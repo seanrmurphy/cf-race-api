@@ -1,0 +1,10 @@
+{
+  "location": "Dublin",
+  "name": "Dublin Marathon",
+  "event_date": "2024-05-01",
+  "run_types": [
+    "marathon",
+    "half-marathon",
+    "10km"
+  ]
+}

@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  version: 0.1.0
+  title:
+  description: race example API definition
+# security:
+#   - ApiKeyAuth: []
+paths:
+  /race:
+    post:
+      description: Creates a new race
+      requestBody:
+        description: Optional description in json
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RaceInfo"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RaceInfo"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /race/{race_id}:
+    get:
+      description: Returns basic info pertaining to a race
+      parameters:
+        - in: path
+          name: race_id
+          schema:
+            type: integer
+          required: true
+          description: ID of Race
+      responses:
+        "200":
+          description: Return info pertaining to a specific race
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RaceInfo"
+        "404":
+          description: No race with given ID found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /race/{race_id}/results:
+    get:
+      description: Returns ordered set of results for a given race
+      parameters:
+        - in: path
+          name: race_id
+          schema:
+            type: integer
+          required: true
+          description: ID of Race
+      responses:
+        "200":
+          description: Return ranked set of results for given race
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RaceResult"
+        "404":
+          description: No race with given found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      description: Adds a set of results to a given race
+      parameters:
+        - in: path
+          name: race_id
+          schema:
+            type: integer
+          required: true
+          description: ID of Race
+      requestBody:
+        description: Results of race
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/RaceResult"
+      responses:
+        "201":
+          description: Created
+          content:
+          application/json:
+            schema:
+              type:
+                $ref: "#/components/schemas/Message"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    Message:
+      type: object
+      properties:
+        text:
+          type: string
+      required:
+        - text
+
+    RaceInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        location:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        name:
+          type: string
+        event_date:
+          type: string
+          format: date
+        run_types:
+          type: array
+          items:
+            type: string
+      required:
+        - location
+        - name
+        - event_date
+        - run_types
+
+    RaceResult:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        race_id:
+          type: integer
+        run_type:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+      required:
+        - name
+        - run_type
+        - start_time
+        - end_time
+
+    AdminStatus:
+      type: object
+      properties:
+        number_of_races:
+          type: integer
+        number_of_results:
+          type: integer
