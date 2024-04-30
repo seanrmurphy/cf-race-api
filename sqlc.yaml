@@ -1,0 +1,10 @@
+version: "2"
+sql:
+  - schema: "sql/schema.sql"
+    queries: "sql/query.sql"
+    # d1 is quite sqlite compatible
+    engine: "sqlite"
+    gen:
+      go:
+        package: "dbqueries"
+        out: "dbqueries"
