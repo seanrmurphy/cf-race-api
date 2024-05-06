@@ -72,7 +72,7 @@ func (p *ServerImplementation) RacePost(ctx context.Context, req *api.RaceInfo) 
 
 	// map user as per the db record to user as per the API.
 	var runTypesUnmarshalled []string
-	_ = json.Unmarshal([]byte(dbRace.RunTypes), runTypesUnmarshalled)
+	_ = json.Unmarshal([]byte(dbRace.RunTypes), &runTypesUnmarshalled)
 	returnVal := api.RaceInfo{
 		ID:        api.NewOptInt(int(dbRace.ID)),
 		Name:      dbRace.Name,
