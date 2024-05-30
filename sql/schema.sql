@@ -17,5 +17,8 @@ CREATE TABLE IF NOT EXISTS race_results (
     race_id INTEGER NOT NULL,
     start_time INTEGER NOT NULL,
     end_time INTEGER NOT NULL,
+    first_name TEXT,
+    last_name TEXT,
+    race_number INTEGER,
     FOREIGN KEY(race_id) REFERENCES race_info(id)
 );

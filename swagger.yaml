@@ -105,6 +105,31 @@ paths:
             schema:
               type:
                 $ref: "#/components/schemas/Message"
+  /results:
+    post:
+      description: Returns a set of results with the given filter
+      requestBody:
+        description: Filter for race results
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResultsFilter"
+      responses:
+        "200":
+          description: Return ranked set of results filtered with given filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RaceResult"
+        "400":
+          description: Bad request - filter is somehow invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   securitySchemes:
@@ -160,8 +185,12 @@ components:
       properties:
         id:
           type: integer
-        name:
+        first_name:
           type: string
+        last_name:
+          type: string
+        race_number:
+          type: int
         race_id:
           type: integer
         run_type:
@@ -173,10 +202,30 @@ components:
           type: string
           format: date-time
       required:
-        - name
+        - first_name
+        - last_name
+        - race_number
         - run_type
         - start_time
         - end_time
+
+    ResultsFilter:
+      type: object
+      properties:
+        locations:
+          type: array
+          items:
+            type: string
+        race_type:
+          type: array
+          items:
+            type: string
+        time_range_min:
+          type: string
+          format: date-time
+        time_range_max:
+          type: string
+          format: date-time
 
     AdminStatus:
       type: object
