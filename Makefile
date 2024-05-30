@@ -18,3 +18,10 @@ deploy:
 .PHONY: dev
 dev:
 	wrangler dev
+
+gobuild:
+	mkdir -p build
+	ogen ./swagger.yaml
+	sqlc generate
+	go mod tidy
+	GOOS=js GOARCH=wasm go build -o ./build/app.wasm

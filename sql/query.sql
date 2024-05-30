@@ -1,6 +1,6 @@
 -- name: GetRaceInfo :many
 SELECT * FROM race_info
-LIMIT 10; 
+LIMIT 10;
 
 -- name: GetRaceInfoById :one
 SELECT * FROM race_info

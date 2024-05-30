@@ -190,7 +190,7 @@ components:
         last_name:
           type: string
         race_number:
-          type: int
+          type: integer
         race_id:
           type: integer
         run_type:

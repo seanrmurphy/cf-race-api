@@ -18,4 +18,3 @@ CREATE TABLE IF NOT EXISTS race_results (
     end_time INTEGER NOT NULL,
     FOREIGN KEY(race_id) REFERENCES race_info(id)
 );
-

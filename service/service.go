@@ -165,10 +165,12 @@ func (p *ServerImplementation) RaceRaceIDResultsGet(ctx context.Context, params 
 	var returnVal []api.RaceResult
 	for _, result := range raceResults {
 		returnVal = append(returnVal, api.RaceResult{
-			Name:      result.Name,
-			StartTime: time.UnixMicro(result.StartTime),
-			EndTime:   time.UnixMicro(result.EndTime),
-			RunType:   result.RunType,
+			FirstName:  result.FirstName.String,
+			LastName:   result.LastName.String,
+			RaceNumber: int(result.RaceNumber.Int64),
+			StartTime:  time.UnixMicro(result.StartTime),
+			EndTime:    time.UnixMicro(result.EndTime),
+			RunType:    result.RunType,
 		})
 	}
 
@@ -192,7 +194,7 @@ func (p *ServerImplementation) RaceRaceIDResultsPost(ctx context.Context, req []
 
 	for _, result := range req {
 		addRaceResultParams := dbqueries.AddRaceResultParams{
-			Name:      result.Name,
+			FirstName: sql.NullString{String: result.FirstName},
 			RaceID:    int64(params.RaceID),
 			StartTime: result.StartTime.UnixMicro(),
 			EndTime:   result.EndTime.UnixMicro(),
@@ -211,4 +213,30 @@ func (p *ServerImplementation) RaceRaceIDResultsPost(ctx context.Context, req []
 
 	}
 	return nil
+}
+
+func (p *ServerImplementation) ResultsPost(ctx context.Context, req *api.ResultsFilter) (api.ResultsPostRes, error) {
+	// the filter does not work as yet as it needs a little more
+	if p.initialized == false {
+		err := p.initialize(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("Internal server error: service unavailable: %w", err)
+		}
+	}
+	queries := dbqueries.New(p.db)
+
+	res, _ := queries.GetFilteredRaceResults(ctx)
+	var returnVal []api.RaceResult
+	for _, result := range res {
+		returnVal = append(returnVal, api.RaceResult{
+			FirstName:  result.FirstName.String,
+			LastName:   result.LastName.String,
+			RaceNumber: int(result.RaceNumber.Int64),
+			StartTime:  time.UnixMicro(result.StartTime),
+			EndTime:    time.UnixMicro(result.EndTime),
+			RunType:    result.RunType,
+		})
+	}
+	returnValTyped := api.ResultsPostOKApplicationJSON(returnVal)
+	return &returnValTyped, nil
 }
