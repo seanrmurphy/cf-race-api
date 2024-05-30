@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS race_info (
 
 CREATE TABLE IF NOT EXISTS race_results (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
     run_type TEXT NOT NULL,
     race_id INTEGER NOT NULL,
     start_time INTEGER NOT NULL,

@@ -27,5 +27,7 @@ INSERT INTO race_results (
 RETURNING *;
 
 -- name: GetFilteredRaceResults :many
-SELECT * FROM race_results
+SELECT res.first_name, res.last_name, res.race_number, race.location, res.run_type, res.start_time, res.end_time
+FROM race_results res
+JOIN race_info race ON res.race_id = race.id
 LIMIT 100;

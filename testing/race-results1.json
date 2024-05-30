@@ -1,18 +1,24 @@
 [
   {
-    "name": "John Smith",
+    "first_name": "John",
+    "last_name": "Smith",
+    "race_number": 235,
     "run_type": "marathon",
     "start_time": "2024-05-01T09:04:00Z",
     "end_time": "2024-05-01T12:04:01Z"
   },
   {
-    "name": "Joanne Smith",
+    "first_name": "Joanne",
+    "last_name": "Smith",
+    "race_number": 1024,
     "run_type": "marathon",
     "start_time": "2024-05-01T09:03:00Z",
     "end_time": "2024-05-01T12:03:01Z"
   },
   {
-    "name": "Johannes Smith",
+    "first_name": "Johannes",
+    "last_name": "Smith",
+    "race_number": 2048,
     "run_type": "half marathon",
     "start_time": "2024-05-01T09:02:00Z",
     "end_time": "2024-05-01T12:02:01Z"

@@ -193,6 +193,8 @@ components:
           type: integer
         race_id:
           type: integer
+        race_location:
+          type: string
         run_type:
           type: string
         start_time:

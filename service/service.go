@@ -194,11 +194,13 @@ func (p *ServerImplementation) RaceRaceIDResultsPost(ctx context.Context, req []
 
 	for _, result := range req {
 		addRaceResultParams := dbqueries.AddRaceResultParams{
-			FirstName: sql.NullString{String: result.FirstName},
-			RaceID:    int64(params.RaceID),
-			StartTime: result.StartTime.UnixMicro(),
-			EndTime:   result.EndTime.UnixMicro(),
-			RunType:   result.RunType,
+			FirstName:  sql.NullString{String: result.FirstName, Valid: true},
+			LastName:   sql.NullString{String: result.LastName, Valid: true},
+			RaceNumber: sql.NullInt64{Int64: int64(result.RaceNumber), Valid: true},
+			RaceID:     int64(params.RaceID),
+			StartTime:  result.StartTime.UnixMicro(),
+			EndTime:    result.EndTime.UnixMicro(),
+			RunType:    result.RunType,
 		}
 		_, err := queries.AddRaceResult(ctx, addRaceResultParams)
 		if err != nil {
@@ -227,14 +229,16 @@ func (p *ServerImplementation) ResultsPost(ctx context.Context, req *api.Results
 
 	res, _ := queries.GetFilteredRaceResults(ctx)
 	var returnVal []api.RaceResult
+	log.Printf("len res: %v\n", len(res))
 	for _, result := range res {
 		returnVal = append(returnVal, api.RaceResult{
-			FirstName:  result.FirstName.String,
-			LastName:   result.LastName.String,
-			RaceNumber: int(result.RaceNumber.Int64),
-			StartTime:  time.UnixMicro(result.StartTime),
-			EndTime:    time.UnixMicro(result.EndTime),
-			RunType:    result.RunType,
+			FirstName:    result.FirstName.String,
+			LastName:     result.LastName.String,
+			RaceLocation: api.NewOptString(result.Location),
+			RaceNumber:   int(result.RaceNumber.Int64),
+			StartTime:    time.UnixMicro(result.StartTime),
+			EndTime:      time.UnixMicro(result.EndTime),
+			RunType:      result.RunType,
 		})
 	}
 	returnValTyped := api.ResultsPostOKApplicationJSON(returnVal)
