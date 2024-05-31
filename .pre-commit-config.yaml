@@ -55,9 +55,10 @@ repos:
       #     #
       #     # Go Vet
       #     #
-      - id: go-vet
+      # - id: go-vet
+      #   args: ["--hook:env:GOOS=js", "--hook:env:GOARCH=wasm"]
+      - id: go-vet-mod
         args: ["--hook:env:GOOS=js", "--hook:env:GOARCH=wasm"]
-      #     - id: go-vet-mod
       #     - id: go-vet-pkg
       #     - id: go-vet-repo-mod
       #     - id: go-vet-repo-pkg
