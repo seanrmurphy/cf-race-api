@@ -13,6 +13,7 @@ import (
 	"github.com/syumai/workers/cloudflare/d1"
 )
 
+// ServerImplementation implements the cf-race-api service.
 type ServerImplementation struct {
 	DatabaseEnvVarName string
 	initialized        bool
@@ -24,7 +25,7 @@ func (p *ServerImplementation) initialize(ctx context.Context) error {
 	// D1 connector requires request's context to initialize DB.
 	c, err := d1.OpenConnector(p.DatabaseEnvVarName)
 	if err != nil {
-		return fmt.Errorf("Internal server error: service unavailable: %w", err)
+		return fmt.Errorf("internal server error: service unavailable: %w", err)
 	}
 	// use sql.OpenDB instead of sql.Open.
 	p.db = sql.OpenDB(c)
@@ -38,10 +39,10 @@ func (p *ServerImplementation) initialize(ctx context.Context) error {
 //
 // POST /race
 func (p *ServerImplementation) RacePost(ctx context.Context, req *api.RaceInfo) (api.RacePostRes, error) {
-	if p.initialized == false {
+	if !p.initialized {
 		err := p.initialize(ctx)
 		if err != nil {
-			return nil, fmt.Errorf("Internal server error: service unavailable: %w", err)
+			return nil, fmt.Errorf("internal server error: service unavailable: %w", err)
 		}
 	}
 	queries := dbqueries.New(p.db)
@@ -91,10 +92,10 @@ func (p *ServerImplementation) RacePost(ctx context.Context, req *api.RaceInfo) 
 //
 // GET /race/{race_id}
 func (p *ServerImplementation) RaceRaceIDGet(ctx context.Context, params api.RaceRaceIDGetParams) (api.RaceRaceIDGetRes, error) {
-	if p.initialized == false {
+	if !p.initialized {
 		err := p.initialize(ctx)
 		if err != nil {
-			return nil, fmt.Errorf("Internal server error: service unavailable: %w", err)
+			return nil, fmt.Errorf("internal server error: service unavailable: %w", err)
 		}
 	}
 	queries := dbqueries.New(p.db)
@@ -143,10 +144,10 @@ func (p *ServerImplementation) RaceRaceIDGet(ctx context.Context, params api.Rac
 //
 // GET /race/{race_id}/results
 func (p *ServerImplementation) RaceRaceIDResultsGet(ctx context.Context, params api.RaceRaceIDResultsGetParams) (api.RaceRaceIDResultsGetRes, error) {
-	if p.initialized == false {
+	if !p.initialized {
 		err := p.initialize(ctx)
 		if err != nil {
-			return nil, fmt.Errorf("Internal server error: service unavailable: %w", err)
+			return nil, fmt.Errorf("internal server error: service unavailable: %w", err)
 		}
 	}
 	queries := dbqueries.New(p.db)
@@ -184,10 +185,10 @@ func (p *ServerImplementation) RaceRaceIDResultsGet(ctx context.Context, params 
 //
 // POST /race/{race_id}/results
 func (p *ServerImplementation) RaceRaceIDResultsPost(ctx context.Context, req []api.RaceResult, params api.RaceRaceIDResultsPostParams) error {
-	if p.initialized == false {
+	if !p.initialized {
 		err := p.initialize(ctx)
 		if err != nil {
-			return fmt.Errorf("Internal server error: service unavailable: %w", err)
+			return fmt.Errorf("internal server error: service unavailable: %w", err)
 		}
 	}
 	queries := dbqueries.New(p.db)
@@ -217,12 +218,16 @@ func (p *ServerImplementation) RaceRaceIDResultsPost(ctx context.Context, req []
 	return nil
 }
 
+// ResultsPost implements POST /results operation.
+//
+// It enables results for a specified race to be posted; an error is
+// returned if the race id is not defined
 func (p *ServerImplementation) ResultsPost(ctx context.Context, req *api.ResultsFilter) (api.ResultsPostRes, error) {
 	// the filter does not work as yet as it needs a little more
-	if p.initialized == false {
+	if !p.initialized {
 		err := p.initialize(ctx)
 		if err != nil {
-			return nil, fmt.Errorf("Internal server error: service unavailable: %w", err)
+			return nil, fmt.Errorf("internal server error: service unavailable: %w", err)
 		}
 	}
 	queries := dbqueries.New(p.db)
